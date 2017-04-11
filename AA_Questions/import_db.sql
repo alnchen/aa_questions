@@ -74,7 +74,7 @@ INSERT INTO
   replies (question_id, parent_id, user_id, body)
 VALUES
   ((SELECT id FROM questions WHERE title = 'Life'), NULL, (SELECT id FROM users WHERE lname = 'Dobrynin'), 'Good Q!'),
-  ((SELECT id FROM questions WHERE title = 'Life'), (SELECT id FROM replies WHERE body = 'Good Q!'), (SELECT id FROM users WHERE lname = 'Chen'), 'Thanks!');
+  ((SELECT id FROM questions WHERE title = 'Life'), 1, (SELECT id FROM users WHERE lname = 'Chen'), 'Thanks!');
 
 INSERT INTO
   question_likes (user_id, question_id)
