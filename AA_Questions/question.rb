@@ -1,6 +1,7 @@
 require_relative  'questions_db.rb'
 require_relative  'user.rb'
 require_relative  'reply.rb'
+require_relative 'question_likes'
 
 class Question
 
@@ -80,6 +81,10 @@ class Question
     SQL
   end
 
+  def save
+    @id.nil? ? create : update
+  end
+
   def author
     User.find_by_id(@user_id)
   end
@@ -91,4 +96,21 @@ class Question
   def followers
     QuestionFollow.followers_for_question_id(@id)
   end
+
+  def self.most_followed(n)
+    QuestionFollow.most_followed_questions(n)
+  end
+
+  def likers
+    QuestionLike.likers_for_question_id(@id)
+  end
+
+  def num_likes
+    QuestionLike.num_likes_for_question_id(@id)
+  end
+
+  def self.most_liked(n)
+    QuestionLike.most_liked_questions(n)
+  end
+
 end

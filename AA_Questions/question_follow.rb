@@ -43,13 +43,13 @@ class QuestionFollow
   def self.most_followed_questions(n)
     most_followed_questions = QuestionsDatabase.instance.execute(<<-SQL, n)
       SELECT
-        question.id, question.title, question.body, question.user_id
+        questions.id, questions.title, questions.body, questions.user_id
       FROM
         questions
       JOIN
         question_follows ON question_follows.question_id = questions.id
       GROUP BY
-        question.id
+        questions.id
       ORDER BY
         COUNT(*) DESC
       LIMIT

@@ -1,6 +1,7 @@
 require_relative 'questions_db.rb'
-require_relative  'question.rb'
-require_relative  'reply.rb'
+require_relative 'question.rb'
+require_relative 'reply.rb'
+require_relative 'question_likes'
 
 class User
   attr_accessor :fname, :lname
@@ -75,5 +76,26 @@ class User
 
   def followed_questions
     QuestionFollow.followed_questions_for_user_id(@id)
+  end
+
+  def liked_questions
+    QuestionLike.liked_questions_for_user_id(@id)
+  end
+
+  def average_karma
+    karma = QuestionsDatabase.instance.execute(<<-SQL, @id)
+      SELECT
+        CAST(COUNT(DISTINCT(questions.id)) AS FLOAT) AS num_questions, COUNT(question_likes.id) AS num_likes
+      FROM
+        questions
+      LEFT JOIN
+        question_likes ON question_likes.question_id = questions.id
+      WHERE
+        questions.user_id = ?
+    SQL
+
+    num_questions = karma.first['num_questions']
+    num_likes = karma.first['num_likes']
+    num_likes / num_questions
   end
 end
