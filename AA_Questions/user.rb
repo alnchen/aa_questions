@@ -85,7 +85,7 @@ class User
   def average_karma
     karma = QuestionsDatabase.instance.execute(<<-SQL, @id)
       SELECT
-        CAST(COUNT(DISTINCT(questions.id)) AS FLOAT) AS num_questions, COUNT(question_likes.id) AS num_likes
+        CAST(COUNT(DISTINCT(questions.id)) AS FLOAT) / COUNT(question_likes.id) AS average_karma
       FROM
         questions
       LEFT JOIN
@@ -94,8 +94,6 @@ class User
         questions.user_id = ?
     SQL
 
-    num_questions = karma.first['num_questions']
-    num_likes = karma.first['num_likes']
-    num_likes / num_questions
+    karma.first['average_karma']
   end
 end
